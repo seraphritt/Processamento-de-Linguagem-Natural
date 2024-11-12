@@ -30,4 +30,4 @@ random_int = random.randint(8000, len(lista_path))
 # pega um arquivo entre os 2000 arquivos restantes pertencentes ao conjunto de teste
 whole_txt = read_files.read_json("corpus_extracted/" + lista_path[random_int])["text"]
 lista_sent = encoding.encode(whole_txt)
-print(perplexity.calculate(lista_sent, bigrams))
+print(f"Perplexidade: {perplexity.calculate(lista_sent, bigrams)}")
