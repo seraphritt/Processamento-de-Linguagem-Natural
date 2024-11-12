@@ -24,10 +24,10 @@ ans = predict_function.predict(40, bigrams, previous_token, g)
 print(encoding.decode(ans))
 
 # perplexity calculation
-count = 0
 lista_path = os.listdir("corpus_extracted")
 random_int = random.randint(8000, len(lista_path))
 # pega um arquivo entre os 2000 arquivos restantes pertencentes ao conjunto de teste
 whole_txt = read_files.read_json("corpus_extracted/" + lista_path[random_int])["text"]
+print(whole_txt)
 lista_sent = encoding.encode(whole_txt)
 print(f"Perplexidade: {perplexity.calculate(lista_sent, bigrams)}")
