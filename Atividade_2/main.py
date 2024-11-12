@@ -5,38 +5,23 @@ import os
 import torch
 import math
 import time
+import train_set
 
 # SOMENTE SE QUISER ESCREVER OS ARQUIVOS NO sum_corpus.txt
-count = 0
-if not os.path.exists('sum_corpus_train.txt'):
-    if not os.path.exists('corpus_extracted'):
-        unzip.extract('corpus.zip', 'corpus_extracted')
-    for each in os.listdir("corpus_extracted"):
-        if count == 9000:
-            break
-        count += 1
-        data_json = read_files.read_json("corpus_extracted/" + each)
-        with open("sum_corpus_train.txt", "a", encoding="utf-8") as file:
-            file.write(data_json["text"])
-    print(f"Arquivo de texto sum_corpus.txt criado")
-with open("sum_corpus_train.txt", "r", encoding="utf-8") as file: # abre o arquivo sum_corpus.txt e lê o seu conteúdo
+name_train = "sum_corpus_train.txt"
+name_test = "sum_corpus_test.txt"
+train_set.create_train_file(name_train, 8000)
+with open(name_train, "r", encoding="utf-8") as file: # abre o arquivo sum_corpus.txt e lê o seu conteúdo
     whole_txt = file.read()
 encoding = tiktoken.get_encoding("cl100k_base") # base do gpt-4-turbo, gpt-4, gpt-3.5-turbo
 tokens = []
 lista_sent = encoding.encode(whole_txt)
-# print(lista_sent)
 bigrams = {}
-dict_keys = {}
 for a, b in zip(lista_sent, lista_sent[1:]):
     try:
         bigrams[(a, b)] += 1
     except KeyError:
         bigrams.update({(a, b): 1})
-    try:
-        dict_keys[a].add((a, b))
-    except KeyError:
-        dict_keys[a] = {(a, b)}
-print(dict_keys)
 g = torch.Generator().manual_seed(309400321)
 previous_token = encoding.encode("Bom dia")
 print(previous_token)
