@@ -8,7 +8,7 @@ import pandas
 
 
 # lendo csv
-df = pandas.read_csv("data/Dmoz-Sports.csv")
+df = pandas.read_csv("data/classic4.csv")
 df_copy = df.copy()
 x_train, x_test = train_test_split(df_copy, test_size=0.2, stratify=df_copy['class'])
 categories_on_df = list(set(df['class']))
