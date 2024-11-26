@@ -4,7 +4,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import f1_score
 from sklearn.model_selection import train_test_split
 import pandas
-from sklearn import linear_model
+from sklearn import svm
 # lendo csv
 df = pandas.read_csv("data/classic4.csv")
 df_copy = df.copy()
@@ -28,9 +28,8 @@ for each in x_train['class']:
 y_test = []
 for each in x_test['class']:
     y_test.append(dict_cats[each])
-lreg = linear_model.LogisticRegression(multi_class='ovr', solver='liblinear')
-lreg.fit(xtrain_tfidf, y_train)
-predicted = lreg.predict(xtest_tfidf)
+supp_vect_masch = svm.SVC(kernel='rbf', gamma=0.5, C=0.1).fit(xtrain_tfidf, y_train)
+predicted = supp_vect_masch.predict(xtest_tfidf)
 # print(xtrain_tfidf)
 print(f"Accuracy: {metrics.accuracy_score(y_test, predicted)}")
 print(confusion_matrix(y_test, predicted))
