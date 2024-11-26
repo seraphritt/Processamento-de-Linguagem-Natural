@@ -8,8 +8,8 @@ from sklearn import linear_model
 # lendo csv
 df = pandas.read_csv("data/classic4.csv")
 df_copy = df.copy()
-x_train, x_test = train_test_split(df_copy, test_size=0.2, stratify=df_copy['class'])
-categories_on_df = list(set(df['class']))
+x_train, x_test = train_test_split(df_copy, test_size=0.2, stratify=df_copy['class']) # divide a base de dados em 80% train e 20% test
+categories_on_df = list(set(df['class'])) # pega todas as categorias da base de dados
 dict_cats = {y: x for x, y in enumerate(categories_on_df)}
 lista_cats = list(dict_cats.keys())
 print(lista_cats)
