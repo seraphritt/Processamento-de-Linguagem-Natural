@@ -1,4 +1,4 @@
 Model,Best Score,Best Parameters,Test Set f1_macro
-Random Forest,0.9302989092608686,"{'max_depth': None, 'min_samples_leaf': 1, 'min_samples_split': 10, 'n_estimators': 200}",0.9457364341085271
-Logistic Regression,0.9582527451545012,"{'C': 1.0, 'penalty': 'l2', 'solver': 'saga'}",0.9654686398872445
-Naive Bayes,0.9614527861235563,"{'alpha': 0.1, 'fit_prior': True, 'force_alpha': True}",0.9675828047921071
+Random Forest,0.9305858720605572,"{'max_depth': None, 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 200}",0.9351656095842142
+Logistic Regression,0.9571885276416208,"{'C': 1.0, 'penalty': 'l2', 'solver': 'saga'}",0.9626497533474278
+Naive Bayes,0.9646275901295894,"{'alpha': 0.1, 'fit_prior': True, 'force_alpha': True}",0.9534883720930233

@@ -3,6 +3,7 @@ from sklearn.naive_bayes import MultinomialNB
 import pandas
 from sklearn import linear_model
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
 
 
 def read_csv(file_name):
@@ -56,3 +57,37 @@ def model_selector(model: str, xtrain_tfidf, xtest_tfidf, y_train):
         return random_f.predict(xtest_tfidf)
     else:
         print("Select one of these 3 models: naive bayes, logistic regression, random forest")
+
+
+def grid_search(estimator, parameters, cv=5, scoring='f1_macro', verbose=0, n_jobs=1):
+    return GridSearchCV(estimator=estimator, param_grid=parameters, scoring=scoring, cv=cv, verbose=verbose, n_jobs=n_jobs)
+
+
+def gridsearchs_data(NB, NBScore, LogReg, LogRegScore, RandomForest, RandomForestScore):
+    data = [
+        {
+            "Model": "Random Forest",
+            "Best Score": RandomForest.best_score_,
+            "Best Parameters": RandomForest.best_params_,
+            "Test Set f1_macro": RandomForestScore
+        },
+        {
+            "Model": "Logistic Regression",
+            "Best Score": LogReg.best_score_,
+            "Best Parameters": LogReg.best_params_,
+            "Test Set f1_macro": LogRegScore
+        },
+        {
+            "Model": "Naive Bayes",
+            "Best Score": NB.best_score_,
+            "Best Parameters": NB.best_params_,
+            "Test Set f1_macro": NBScore
+        }
+    ]
+    return data
+
+
+def show_results(grid_search, model_name):
+    print(model_name)
+    print(f"Best score: {grid_search.best_score_:.3f}")
+    print(f"Best parameters: {grid_search.best_params_}")

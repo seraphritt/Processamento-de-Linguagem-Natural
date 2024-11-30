@@ -1,4 +1,3 @@
-from sklearn.model_selection import GridSearchCV
 import utils
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -37,19 +36,15 @@ param_grid = {
     'force_alpha': [True, False],
 }
 # usa-se cv = 5 por padrão, ou seja, cross-validation com 5 folds
-grid_search_NB = GridSearchCV(estimator=MultinomialNB(),
-                           param_grid=param_grid,
-                           cv=5,
-                           scoring='f1_macro')
+# usa-se f1-macro por padrão da função
+grid_search_NB = utils.grid_search(MultinomialNB(), param_grid)
 
 grid_search_NB.fit(xtrain_tfidf, y_train)
-print("Naive Bayes Grid Search")
-print(f"Best score: {grid_search_NB.best_score_:.3f}")
-print(f"Best parameters: {grid_search_NB.best_params_}")
+utils.show_results(grid_search_NB, "Naive Bayes Grid Search")
 
 best_model_NB = grid_search_NB.best_estimator_
-f1_macro = best_model_NB.score(xtest_tfidf, y_test)
-print(f"Test set f1_macro: {f1_macro:.3f}")
+f1_macroNB = best_model_NB.score(xtest_tfidf, y_test)
+print(f"Test set f1_macro: {f1_macroNB:.3f}")
 print("--------------------------------------------------------------------------------------------------------------")
 
 predicted_LRG = utils.model_selector("logistic regression", xtrain_tfidf, xtest_tfidf, y_train)
@@ -63,20 +58,15 @@ param_grid = {
     'penalty': ['l1', 'l2'],
 }
 
-grid_search_LogReg = GridSearchCV(estimator=linear_model.LogisticRegression(),
-                           param_grid=param_grid,
-                           cv=5,
-                           scoring='f1_macro')
+grid_search_LogReg = utils.GridSearchCV(linear_model.LogisticRegression(), param_grid)
 
 grid_search_LogReg.fit(xtrain_tfidf, y_train)
 
-print("Logistic Regression Grid Search")
-print(f"Best score: {grid_search_LogReg.best_score_:.3f}")
-print(f"Best parameters: {grid_search_LogReg.best_params_}")
+utils.show_results(grid_search_LogReg, "Logistic Regression Grid Search")
 
 best_model_LogReg = grid_search_LogReg.best_estimator_
-f1_macro = best_model_LogReg.score(xtest_tfidf, y_test)
-print(f"Test set f1_macro: {f1_macro:.3f}")
+f1_macroLR = best_model_LogReg.score(xtest_tfidf, y_test)
+print(f"Test set f1_macro: {f1_macroLR:.3f}")
 print("--------------------------------------------------------------------------------------------------------------")
 
 # gridsearch para svm
@@ -92,47 +82,17 @@ param_grid = {
     'min_samples_leaf': [1, 2, 4]
 }
 
-grid_search_RF = GridSearchCV(
-    estimator=RandomForestClassifier(),
-    param_grid=param_grid,
-    cv=5,
-    scoring='f1_macro',
-    verbose=1,
-    n_jobs=-1
-)
-
+grid_search_RF = utils.GridSearchCV(RandomForestClassifier(), param_grid, verbose=1, n_jobs=-1)
 grid_search_RF.fit(xtrain_tfidf, y_train)
 
-print("Random Forest Grid Search")
-print(f"Best score: {grid_search_RF.best_score_:.3f}")
-print(f"Best parameters: {grid_search_RF.best_params_}")
+utils.show_results(grid_search_LogReg, "Random Forest Grid Search")
 
 best_modelRF = grid_search_RF.best_estimator_
-f1_macro = best_modelRF.score(xtest_tfidf, y_test)
-print(f"Test set f1_macro: {f1_macro:.3f}")
+f1_macroRF = best_modelRF.score(xtest_tfidf, y_test)
+print(f"Test set f1_macro: {f1_macroRF:.3f}")
 print("--------------------------------------------------------------------------------------------------------------")
 # salvando todas as informações em um csv por meio de um dataframe
-data = [
-    {
-        "Model": "Random Forest",
-        "Best Score": grid_search_RF.best_score_,
-        "Best Parameters": grid_search_RF.best_params_,
-        "Test Set f1_macro": best_modelRF.score(xtest_tfidf, y_test)
-    },
-    {
-        "Model": "Logistic Regression",
-        "Best Score": grid_search_LogReg.best_score_,
-        "Best Parameters": grid_search_LogReg.best_params_,
-        "Test Set f1_macro": best_model_LogReg.score(xtest_tfidf, y_test)
-    },
-    {
-        "Model": "Naive Bayes",
-        "Best Score": grid_search_NB.best_score_,
-        "Best Parameters": grid_search_NB.best_params_,
-        "Test Set f1_macro": best_model_NB.score(xtest_tfidf, y_test)
-    }
-]
-
+data = utils.gridsearchs_data(grid_search_NB, f1_macroNB, grid_search_LogReg, f1_macroLR, grid_search_RF, f1_macroRF)
 df = pd.DataFrame(data)
 
 csv_file_path = 'Grid_Search_Results.csv'
